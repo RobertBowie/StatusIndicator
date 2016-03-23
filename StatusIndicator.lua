@@ -98,7 +98,7 @@ durationIDs[1088] = {url="http://firefall-wiki.com/images/firefall-wiki.com/a/a7
 durationIDs[1076] = {url="http://firefall-wiki.com/images/firefall-wiki.com/e/e5/Smoke_Screen.png",} -- Smoke Screen; deployment delay, but not significant
 durationIDs[1387] = {url="http://firefall-wiki.com/images/firefall-wiki.com/b/bb/Execution64.png",} -- Execution
 durationIDs[1392] = {url="http://firefall-wiki.com/images/firefall-wiki.com/3/32/Eruption_Rounds.png",} -- Eruption Rounds
-durationIDs[2011] = {url="http://firefall-wiki.com/images/firefall-wiki.com/e/e1/Icon_perk_passive_siphoning_unit.png", duration= 34.5} -- Heroism
+durationIDs[2011] = {url="http://firefall-wiki.com/images/firefall-wiki.com/e/e1/Icon_perk_passive_siphoning_unit.png",} -- Heroism
 
 --durationIDs[125] = {url="http://firefall-wiki.com/images/firefall-wiki.com/8/85/Remote_Explosive.png",} -- Remote Explosive, has double activation that needs to be worked around
 
@@ -658,18 +658,39 @@ function AbilityMatch(name1, name2) --sees if the two abilities are the same; na
 end
 function trim(s)  --removes whitespace from beginning and end, because Turret Mode's testAbility name has an extra space and is failing comparisons
   return (s:gsub("^%s*(.-)%s*$", "%1"))
-end  
+end
+
+function ParseAllStats()
+  local allStats = Player.GetAllStats();
+  local parsedStats = {};
+
+  for _,stat in pairs(allStats.attribute_categories) do
+    parsedStats[stat.stat_id] = stat;
+  end
+
+  for _,stat in pairs(allStats.item_attributes) do
+    parsedStats[stat.stat_id] = stat;
+  end
+
+  return parsedStats;
+end
 
 function CheckDurationAbilities(event, abilityItem)
   --Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=abilityItem.name}); --for testing
+  local allStatsById = ParseAllStats();
   for _, attribute in pairs(abilityItem.attributes) do
     
     --Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.display_name}); --for testing
     --Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.value}); --more testing
     if (attribute.stat_id == 2011) then -- Testing hard coding a timer for Heroism
       local abilityInfo = durationIDs[2011]
-      -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text="Attempted to display."}); --for testing
-      RegisterStatus(abilityItem.name, abilityInfo.duration, abilityInfo.url)
+      if (allStatsById[2011]) then
+        local heroismDur = allStatsById[2011].current_value
+        -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=heroismDur}); --for testing
+        RegisterStatus(abilityItem.name, heroismDur, abilityInfo.url)
+      end
+      -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text="event.state_dur_total"}); --for testing
+      -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.state_dur_total}); --for testing
       -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {"stat_id ", text=attribute.stat_id}); --for testing
       -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {"value ", text=attribute.value}); --for testing
     elseif (durationIDs[attribute.stat_id]) then -- Duration attributes
