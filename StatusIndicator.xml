@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Component xmlns="http://www.red5studios.com/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.red5studios.com/ ../../../schemas/component.xsd">
+	<Info
+		title="StatusIndicator V2 (previously StatusIndicator by NoReal)"
+		author="Reddeyfish"
+		description="Show status of some buffs/debuffs on the character."
+		url=""
+		uiVersion="1000"
+	/>
+  
+	<Textures>
+		<Texture name="3dActionBar" src="components/MainUI/HUD/3dActionBar/3dactionbar.dds" premultiplied="false" minScale="1">
+			<Region name="Actionbar_Selector" leftPadding="true" rightPadding="true" topPadding="true" bottomPadding="true" top="25" bottom="156" left="689" right="820" />
+			<Region name="circle" leftPadding="true" rightPadding="true" topPadding="true" bottomPadding="true" top="170" bottom="210" left="596" right="636" />
+			<Region name="hkm_glow" leftPadding="true" rightPadding="true" topPadding="true" bottomPadding="true" top="25" bottom="160" left="451" right="586" />
+			<Region name="Actionbar_Cooldown" leftPadding="true" rightPadding="true" topPadding="true" bottomPadding="true" top="4" bottom="15" left="451" right="679" />
+			<Region name="burst" top="4" bottom="237" left="4" right="441" />
+			<Region name="circle_consumable" top="25" bottom="151" left="830" right="956" />
+		</Texture>
+	</Textures>
+
+	<Events>
+		<Event name="ON_COMPONENT_LOAD"			bind="OnComponentLoad"/>
+		<Event name="ON_HIT_TARGET_CONFIRM"		bind="OnDamage"/>
+		<Event name="ON_ABILITY_USED"			bind="OnAbility"/>
+		<Event name="ON_ABILITY_READY"			bind="AbilityReady"/>
+		<Event name="ON_TOOK_HIT"			bind="OnTookHit"/>
+                <Event name="ON_WEAPON_BURST"			bind="OnWeaponBurst"/>
+                <Event name="ON_WEAPON_MODE_CHANGED"		bind="OnWeaponModeChanged"/>
+                <Event name="ON_WEAPON_STATE_CHANGED"		bind="OnWeaponStateChanged"/>
+                <Event name="ON_COMBAT_EVENT"			bind="OnCombatEvent"/>
+		<Event name="MY_HUD_SHOW"			bind="OnHudShow"/>
+		<Event name="MY_VEHICLE_MODE_SHOW"		bind="OnVehicleMode"/>
+		<Event name="ON_WEAPON_RELOAD"			bind="OnWeaponReload"/>
+		<Event name="ON_VEHICLE_UPDATE"			bind="OnVehicleUpdate" />
+	</Events>
+  
+	<Blueprints>
+    <BluePrint name="Status" instantiable="true">
+      <Group name="holder" dimensions="width: 80; height: 80; left: 0; top: 0">
+        <StillArt name="circle" dimensions="width:130%; height:130%" style="texture:3dActionBar;region:circle_consumable; alpha:1.0; tint:00FF00;"/>
+        <StillArt name="iconBackground" dimensions="width:100%; height:100%" style="texture:3dActionBar; region:circle; tint:000000; alpha:0.7"/>
+        <Arc name="cooldown" dimensions="center-x:50%; center-y:50%; width:100%; height:100%;" 
+            style=  "texture:3dActionBar;region:Actionbar_Cooldown;thickness:9;tessellation:33; tint:FF8800; start-angle:180;end-angle:-180;offset:180;shadow:0; visible:true;"/> 
+        <WebImage name="web_icon" dimensions="dock:fill" />
+        <TextTimer name="cooldown_counter" dimensions="center-x:50%; center-y:50%; width:10; height:10" style="font:Narrow_26B; valign:center; halign:center; clip:false; wrap:false; padding:0; visible:true; alpha:0; text-color:#FF8800; format:%.1s"/>
+      </Group>
+    </BluePrint>
+  </Blueprints>
+  
+  <Frames>
+		<HUDFrame name="Main" visible="true" dimensions="center-x:50%; width:400; bottom:100%-20; height:80" cwidth="300" cheight="240">
+			<Children>
+        <Group id="MainGroup" dimensions="height:40; center-y:60%; width:100%">
+        </Group>
+      </Children>
+    </HUDFrame>
+  </Frames>
+</Component>
