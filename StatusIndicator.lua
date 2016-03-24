@@ -99,6 +99,7 @@ durationIDs[1076] = {url="http://firefall-wiki.com/images/firefall-wiki.com/e/e5
 durationIDs[1387] = {url="http://firefall-wiki.com/images/firefall-wiki.com/b/bb/Execution64.png",} -- Execution
 durationIDs[1392] = {url="http://firefall-wiki.com/images/firefall-wiki.com/3/32/Eruption_Rounds.png",} -- Eruption Rounds
 durationIDs[2011] = {url="http://firefall-wiki.com/images/firefall-wiki.com/e/e1/Icon_perk_passive_siphoning_unit.png",} -- Heroism
+durationIDs[2017] = {url="http://icons.iconarchive.com/icons/banzaitokyo/medico/64/biohazard-icon.png",} -- Heroism's shitty partner NoCast
 
 --durationIDs[125] = {url="http://firefall-wiki.com/images/firefall-wiki.com/8/85/Remote_Explosive.png",} -- Remote Explosive, has double activation that needs to be worked around
 
@@ -683,11 +684,19 @@ function CheckDurationAbilities(event, abilityItem)
     --Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.display_name}); --for testing
     --Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.value}); --more testing
     if (attribute.stat_id == 2011) then -- Testing hard coding a timer for Heroism
-      local abilityInfo = durationIDs[2011]
       if (allStatsById[2011]) then
+        local abilityInfo = durationIDs[2011]
         local heroismDur = allStatsById[2011].current_value
         -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=heroismDur}); --for testing
         RegisterStatus(abilityItem.name, heroismDur, abilityInfo.url)
+      end
+
+
+      -- Fix 2017 showing twice:
+      if (allStatsById[2017]) then
+        local abilityInfo = durationIDs[2017]
+        -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text="hit 2017 if"}); --for testing
+        RegisterStatus("doNotCast", 10, abilityInfo.url)  -- Currently creating this twice!  Need to fix:
       end
       -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text="event.state_dur_total"}); --for testing
       -- Component.GenerateEvent("MY_SYSTEM_MESSAGE", {text=attribute.state_dur_total}); --for testing
